@@ -89,7 +89,7 @@ bool Parser::validateRecord(const std::vector<uint8_t>& record) {
 void Parser::handleRecord(const std::vector<uint8_t>& record) {
     const Format::HEADER* header = reinterpret_cast<const Format::HEADER*>(&record[1]);
     if (header->formatCode == 0x01) {
-        Format::Format1 format1;
-        format1.process(record);
+        Format::Format1 format1(record);
+        format1.process();
     }
 }

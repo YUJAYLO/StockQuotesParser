@@ -24,16 +24,10 @@ namespace Converter {
 
     inline std::string PACKBCDToString(const uint8_t* buf, size_t len, int intDigits, int decDigits) {
         std::ostringstream oss;
-        for (size_t i = 0; i < len; ++i) {
-            oss << std::hex << ((buf[i] >> 4) & 0xF) << (buf[i] & 0xF); // std::hex: 這是一個 I/O 操縱器 (manipulator)，它告訴 oss 後面的整數都應該以十六進位的格式來呈現。
-        }
-        std::string result = oss.str();
-        if (result.size() != intDigits + decDigits) {
-            throw std::runtime_error("Invalid PACK BCD length");
-        }
+        // oss << std::setw(intDigits + decDigits + 1) << std::setfill('0');
+        oss << std::fixed << std::setprecision(decDigits) << PACKBCDToInt(buf, len)* pow(10, -decDigits);        
 
-        if(decDigits > 0)
-            result.insert(result.end() - decDigits, '.');
+        std::string result = oss.str();
         return result;
     }
 
