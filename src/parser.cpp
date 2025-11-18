@@ -1,6 +1,6 @@
 #include "..\include\parser.h"
 #include "..\include\format.h"
-#include "..\include\converter.h"
+#include "..\include\utils\converter.h"
 
 #include <fstream>
 #include <iostream>
@@ -71,10 +71,11 @@ void Parser::processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t
 }
 
 bool Parser::validateRecord(const std::vector<uint8_t>& record) {
-    if (record.size() < 12) return false; // Minimum size check
+    if (record.size() < 13) return false; // Minimum size check
 
     // terminal are last two bytes (positions endIdx-2, endIdx-1)
-    if (record[record.size() - 2] != Format::TERMINAL_CODE[0] || record[record.size() - 1] != Format::TERMINAL_CODE[1]) {
+    uint16_t endBytes = (record[record.size() - 2] << 8) | record[record.size() - 1];
+    if (endBytes != Format::TERMINAL_CODE) {
         return false;
     }
 
