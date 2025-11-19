@@ -34,5 +34,8 @@
 # PDF files
 *.pdf
 
-# Binary data files
-*.bin
+# documentation files
+doc/
+
+# build files
+build/
