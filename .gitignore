@@ -39,3 +39,9 @@ doc/
 
 # build files
 build/
+
+# IDE files
+.vscode/
+
+# data files
+data/

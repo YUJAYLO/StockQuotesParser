@@ -39,19 +39,18 @@ namespace Format {
     class Format1 {
     public:
         struct ParsedRecord {
-            std::string symbolCode;
-            std::string symbolShort;
+            std::string stockID;
+            std::string stockName;
             std::string refPrice;
             std::string upLimit;
             std::string downLimit;
-            std::string timestamp;
         };
 
     private:
         #pragma pack(push, 1)
         struct BODY {
-            char symbolCode[6];
-            char symbolShort[16];
+            char stockID[6];
+            char stockName[16];
             uint8_t stockDataReserved1[8];
             uint8_t refPrice[5];
             uint8_t upLimit[5];

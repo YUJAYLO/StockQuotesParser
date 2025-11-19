@@ -17,11 +17,13 @@ void Parser::parseFile() {
 
     std::vector<uint8_t> carry;
     std::vector<uint8_t> buffer(BLOCK_SIZE);
-    while (file.read(reinterpret_cast<char*>(buffer.data()), BLOCK_SIZE) || file.gcount() > 0) {
+    int count = 10;
+    while (count > 0 && (file.read(reinterpret_cast<char*>(buffer.data()), BLOCK_SIZE) || file.gcount() > 0)) {
         std::streamsize bytesRead = file.gcount();
         std::vector<uint8_t> block(buffer.begin(), buffer.begin() + bytesRead);
 
         processBlock(block, carry);
+        count--;
     }
     // after loop, if carry not empty, try final processing (maybe last record)
     if (!carry.empty()) {

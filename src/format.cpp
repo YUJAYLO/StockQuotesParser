@@ -22,17 +22,11 @@ Format1::Format1(const std::vector<uint8_t>& record) {
 void Format1::process() {
 
     ParsedRecord parsed;
-    parsed.symbolCode = std::string(_body.symbolCode, 6);
-    parsed.symbolShort = Converter::Big5ToUTF8(std::string(_body.symbolShort, 16));
+    parsed.stockID = Converter::trim(std::string(_body.stockID, 6));
+    parsed.stockName = Converter::trim(Converter::Big5ToUTF8(std::string(_body.stockName, 16)));
     parsed.refPrice = Converter::PACKBCDToString(_body.refPrice, 5, 5, 4);
     parsed.upLimit = Converter::PACKBCDToString(_body.upLimit, 5, 5, 4);
     parsed.downLimit = Converter::PACKBCDToString(_body.downLimit, 5, 5, 4);
-
-    // Get current timestamp
-    std::time_t t = std::time(nullptr);
-    char buf[20];
-    std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", std::gmtime(&t));
-    parsed.timestamp = buf;
 
     DataAccess::saveFormat1(parsed);
 }

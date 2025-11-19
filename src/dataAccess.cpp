@@ -2,17 +2,16 @@
 #include <fstream>
 #include <../include/utils/json.hpp>
 
-using json = nlohmann::json;
-const std::string dataPath = "build/";
+using json = nlohmann::ordered_json;
+const std::string dataPath = "data/";
 
 void DataAccess::saveFormat1(const Format::Format1::ParsedRecord& record) {
     json jsonRecord = {
-        {"symbol_code", record.symbolCode},
-        {"symbol_short", record.symbolShort},
+        {"stock_id", record.stockID},
+        {"stock_name", record.stockName},
         {"ref_price", record.refPrice},
         {"up_limit", record.upLimit},
-        {"down_limit", record.downLimit},
-        {"timestamp", record.timestamp}
+        {"down_limit", record.downLimit}
     };
 
     std::ofstream outFile(dataPath + "format1.json", std::ios::app);

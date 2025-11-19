@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iomanip>
 #include <windows.h>
+#include <cmath>
 
 namespace Converter {
 
@@ -58,6 +59,16 @@ namespace Converter {
         WideCharToMultiByte(CP_UTF8, 0, wideCharBuffer.data(), -1, &utf8String[0], utf8Size, NULL, NULL);
 
         return utf8String;
+    }
+
+    inline std::string trim(const std::string& str) {
+        const std::string whitespace = " \t\n\r\f\v";
+        size_t first = str.find_first_not_of(whitespace);
+        if (std::string::npos == first) {
+            return "";
+        }
+        size_t last = str.find_last_not_of(whitespace);
+        return str.substr(first, (last - first + 1));
     }
 
 };
