@@ -12,11 +12,11 @@ namespace Format {
 
     #pragma pack(push, 1)
     struct HEADER {
-        uint16_t messageLength;
+        uint8_t messageLength[2];
         uint8_t businessType;
         uint8_t formatCode;
         uint8_t version;
-        uint32_t serialNuum;
+        uint8_t serialNuum[4];
     };
     #pragma pack(pop)
 

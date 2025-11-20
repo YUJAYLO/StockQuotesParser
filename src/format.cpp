@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include <stdexcept>
 
 namespace Format {
 
@@ -11,10 +12,11 @@ Format1::Format1(const std::vector<uint8_t>& record) {
     const RawRecord<BODY_SIZE>* rawRecord = reinterpret_cast<const RawRecord<BODY_SIZE>*>(record.data());
     // std::memcpy(&rawRecord, record.data(), sizeof(RawRecord<BODY_SIZE>));
     
-    if( rawRecord->header.messageLength != _messageLength ||
+    uint16_t headerMessageLength = (rawRecord->header.messageLength[0] << 8) | rawRecord->header.messageLength[1];
+    if( headerMessageLength != _messageLength ||
         rawRecord->header.businessType != _businessType ||
         rawRecord->header.version != _version) {
-        std::cerr << "Warning: Unexpected HEADER values." << std::endl;
+        throw std::runtime_error("Warning: Unexpected HEADER values.");
     }
     std::memcpy(&_body, rawRecord->body, sizeof(BODY));
 }

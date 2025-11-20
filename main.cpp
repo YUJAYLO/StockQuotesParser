@@ -4,7 +4,7 @@
 
 int main() {
     try {
-        Parser parser("./doc/modules.alias.bin");
+        Parser parser("./doc/Tse.bin");
         parser.parseFile();
         std::cout << "Parsing completed successfully." << std::endl;
     } catch (const std::exception& e) {
