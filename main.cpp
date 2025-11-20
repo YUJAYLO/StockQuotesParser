@@ -1,9 +1,10 @@
 #include "./include/parser.h"
 #include <iostream>
+#include <stdexcept>
 
 int main() {
     try {
-        Parser parser("./doc/Tse.bin");
+        Parser parser("./doc/modules.alias.bin");
         parser.parseFile();
         std::cout << "Parsing completed successfully." << std::endl;
     } catch (const std::exception& e) {

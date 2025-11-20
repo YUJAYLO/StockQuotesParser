@@ -18,23 +18,36 @@ void Parser::parseFile() {
     std::vector<uint8_t> carry;
     std::vector<uint8_t> buffer(BLOCK_SIZE);
     int count = 10;
+    bool isFirstBlock = true;
+    bool recordFound = false;
+    
     while (count > 0 && (file.read(reinterpret_cast<char*>(buffer.data()), BLOCK_SIZE) || file.gcount() > 0)) {
         std::streamsize bytesRead = file.gcount();
         std::vector<uint8_t> block(buffer.begin(), buffer.begin() + bytesRead);
 
-        processBlock(block, carry);
+        processBlock(block, carry, isFirstBlock ? &recordFound : nullptr);
+        
+        // If processing first block and no ESC-CODE found, close file and return
+        if (isFirstBlock) {
+            isFirstBlock = false;
+            if (!recordFound) {
+                file.close();
+                throw std::invalid_argument("Invalid .bin file. No record found.");
+            }
+        }
+        
         count--;
     }
     // after loop, if carry not empty, try final processing (maybe last record)
     if (!carry.empty()) {
         std::vector<uint8_t> empty;
-        processBlock(empty, carry); // tries to flush final records
+        processBlock(empty, carry, nullptr); // tries to flush final records
     }
 
     file.close();
 }
 
-void Parser::processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t>& carry) {
+void Parser::processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t>& carry, bool* recordFound) {
     // concatenate carry + block
     std::vector<uint8_t> data;
     data.reserve(carry.size() + block.size());
@@ -60,6 +73,11 @@ void Parser::processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t
 
             std::vector<uint8_t> record(data.begin() + i, data.begin() + i + msgLen);
             if (validateRecord(record)) {
+                // If caller wants to track record detection, set flag
+                if (recordFound != nullptr) {
+                    *recordFound = true;
+                }
+
                 handleRecord(record);
                 i += msgLen;
             } else {

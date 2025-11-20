@@ -15,7 +15,7 @@ private:
     std::string filePath;
     std::vector<uint8_t> leftoverBytes; // Store leftover bytes between blocks
 
-    void processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t>& carry);
+    void processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t>& carry, bool* escCodeFound);
     bool validateRecord(const std::vector<uint8_t>& record);
     void handleRecord(const std::vector<uint8_t>& record);
 };
