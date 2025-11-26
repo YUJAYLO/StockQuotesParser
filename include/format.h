@@ -20,21 +20,6 @@ namespace Format {
     };
     #pragma pack(pop)
 
-    #pragma pack(push, 1)
-    template<int N>
-    struct RawRecord {
-        // ESC (1)
-        uint8_t esc;
-        // HEADER (9)
-        HEADER header;
-        // BODY (N)
-        uint8_t body[N];
-        // checksum (1)
-        uint8_t checksum;
-        // terminal (2)
-        uint16_t terminal;
-    };
-    #pragma pack(pop)
 
     class Format1 {
     public:
@@ -62,16 +47,13 @@ namespace Format {
         };
         #pragma pack(pop)
 
-        static constexpr size_t BODY_SIZE = 101;
-
-        uint16_t _messageLength = 0x0114;
-        uint8_t _businessType = 0x01;
-        uint8_t _version = 0x09;
-        BODY _body;
+        const uint16_t _messageLength = 0x0114;
+        const uint8_t _businessType = 0x01;
+        const uint8_t _version = 0x09;
 
     public:
-        Format1(const std::vector<uint8_t>& record);
-        void process();
+        Format1(const HEADER* header);
+        void process(const std::vector<uint8_t>& body);
     };
 
 } // namespace Format
