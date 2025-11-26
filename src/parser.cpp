@@ -115,9 +115,11 @@ void Parser::handleRecord(const std::vector<uint8_t>& record) {
             Format::Format1 format1(header);
             format1.process(body);
         } catch(...) {}
-    } else if (header->formatCode == 0x06)
-    {
-        /* code */
+    } else if (header->formatCode == 0x06) {
+        try {
+            Format::Format6 format6(header);
+            format6.process(body);
+        } catch(...) {}
     }
     
 }

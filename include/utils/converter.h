@@ -32,6 +32,19 @@ namespace Converter {
         return result;
     }
 
+    inline std::string PACKBCDToTimeStr(const uint8_t* buf, size_t len) {
+        std::ostringstream oss;
+        for (size_t i = 0; i < len; ++i) {
+            oss << std::hex << ((buf[i] >> 4) & 0xF) << (buf[i] & 0xF); // std::hex: 這是一個 I/O 操縱器 (manipulator)，它告訴 oss 後面的整數都應該以十六進位的格式來呈現。
+        }
+        std::string result = oss.str();
+
+        result.insert(result.end() - 6, '.');
+        result.insert(result.begin() + 4, ':');
+        result.insert(result.begin() + 2, ':');
+        return result;
+    }
+
     inline std::string Big5ToUTF8(const std::string& big5) {
         if (big5.empty()) {
             return "";
