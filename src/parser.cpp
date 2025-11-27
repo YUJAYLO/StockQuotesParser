@@ -9,6 +9,7 @@
 
 Parser::Parser(const std::string& filePath) : filePath(filePath) {}
 
+static int count = 2e6; // 1/8
 void Parser::parseFile() {
     std::ifstream file(filePath, std::ios::binary);
     if (!file) {
@@ -17,7 +18,6 @@ void Parser::parseFile() {
 
     std::vector<uint8_t> carry;
     std::vector<uint8_t> buffer(BLOCK_SIZE);
-    int count = 500;
     bool isFirstBlock = true;
     bool recordFound = false;
     
@@ -35,8 +35,6 @@ void Parser::parseFile() {
                 throw std::invalid_argument("Invalid .bin file. No record found.");
             }
         }
-        
-        count--;
     }
     // after loop, if carry not empty, try final processing (maybe last record)
     if (!carry.empty()) {
@@ -83,6 +81,8 @@ void Parser::processBlock(const std::vector<uint8_t>& block, std::vector<uint8_t
             } else {
                 i++; // move forward to find next ESC_CODE
             }
+        
+            count--; // record cnt
             
         } else {
             i++;
@@ -112,16 +112,16 @@ void Parser::handleRecord(const std::vector<uint8_t>& record) {
 
     if (header->formatCode == 0x01) {
         try {
-            static int cnt1 = 0;
-            std::cout << "Format1: " << ++cnt1 << "\r" << std::flush;
+            // static int cnt1 = 0;
+            // std::cout << "Format1: " << ++cnt1 << "\r" << std::flush;
             Format::Format1 format1(header);
             format1.process(body);
         } catch(...) {}
     } else 
     if (header->formatCode == 0x06) {
         try {
-            static int cnt6 = 0;
-            std::cout << "Format6: " << ++cnt6 << "\r" << std::flush;
+            // static int cnt6 = 0;
+            // std::cout << "Format6: " << ++cnt6 << "\r" << std::flush;
             Format::Format6 format6(header);
             format6.process(body);
         } catch(...) {}
