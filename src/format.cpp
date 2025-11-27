@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstring>
 #include <ctime>
+#include <bitset>
 #include <stdexcept>
 
 namespace Format {
@@ -47,6 +48,7 @@ void Format6::process(const std::vector<uint8_t>& rawBody) {
 
     size_t offset = 0;
     const uint8_t* variableData = body->realTimeQuotes;
+    // std::cout << "revealItemNote: " << std::bitset<8>(body->revealItemNote) << std::endl;
 
     // Bit 7: Transaction Data
     if (body->revealItemNote & 0x80) {
