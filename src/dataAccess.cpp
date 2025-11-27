@@ -39,7 +39,7 @@ void DataAccess::saveFormat6(const Format::Format6::ParsedRecord& record) {
                 << record.transactionPrice << "," << record.transactionVol;
         
         // Write 5 levels of Buy Quotes
-        for (int i = 0; i < 5; ++i) {
+        for (size_t i = 0; i < 5; ++i) {
             if (i < record.buyQuotes.size()) {
                 outFile << "," << record.buyQuotes[i].first << "," << record.buyQuotes[i].second;
             } else {
@@ -48,7 +48,7 @@ void DataAccess::saveFormat6(const Format::Format6::ParsedRecord& record) {
         }
 
         // Write 5 levels of Sell Quotes
-        for (int i = 0; i < 5; ++i) {
+        for (size_t i = 0; i < 5; ++i) {
             if (i < record.sellQuotes.size()) {
                 outFile << "," << record.sellQuotes[i].first << "," << record.sellQuotes[i].second;
             } else {
